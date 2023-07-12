@@ -6,8 +6,11 @@ from django.utils import timezone
 
 
 class Categoria(models.Model):
-    nombre = models.CharField(max_length=30, null=False, blank=True)
-
+    nombre = models.CharField(max_length=200, unique=True, null=False, blank=True)
+    activo = models.BooleanField(default=True)
+    cracion = models.DateTimeField(auto_now_add=True)
+    actualizacion = models.DateTimeField(auto_now_add=True)
+    
     def __str__(self) -> str:
         return self.nombre
 
