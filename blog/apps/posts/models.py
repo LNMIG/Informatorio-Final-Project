@@ -1,9 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-list
-# Create your models here.
-
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=200, unique=True, null=False, blank=True)
