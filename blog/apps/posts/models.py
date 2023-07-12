@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-
+list
 # Create your models here.
 
 
@@ -10,6 +10,9 @@ class Categoria(models.Model):
     activo = models.BooleanField(default=True)
     cracion = models.DateTimeField(auto_now_add=True)
     actualizacion = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('nombre',)
     
     def __str__(self) -> str:
         return self.nombre
