@@ -17,7 +17,7 @@ class Categoria(models.Model):
 class Etiqueta(models.Model):
     nombre = models.CharField(max_length=200, unique=True, null=False, blank=True)
     activo = models.BooleanField(default=True)
-    cracion = models.DateTimeField(auto_now_add=True)
+    creacion = models.DateTimeField(auto_now_add=True)
     actualizacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
