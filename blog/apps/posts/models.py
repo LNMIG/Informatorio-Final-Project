@@ -14,6 +14,19 @@ class Categoria(models.Model):
     def __str__(self) -> str:
         return self.nombre
 
+class Etiqueta(models.Model):
+    nombre = models.CharField(max_length=200, unique=True, null=False, blank=True)
+    activo = models.BooleanField(default=True)
+    creacion = models.DateTimeField(auto_now_add=True)
+    actualizacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('nombre',)
+
+    def __str__(self):
+        return self.nombre
+
+
 class Post(models.Model):
     titulo = models.CharField(max_length=50, null=False, blank=False)
     subtitulo = models.CharField(max_length=100, null=True, blank=True)
