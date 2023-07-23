@@ -1,4 +1,6 @@
 {% load static %}
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 
 <!doctype html>
 <html lang="es">
@@ -24,15 +26,32 @@
 
 <body>
   <section class="container">
+
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-      <a href={% url 'inicio' %} class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-        <img class="bi me-2" width="40" height="32" src={% static 'blog/img/logo-tecno.png' %}>
-        <span class="fs-4">Blog Tecno</span>
-      </a>
-      <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
-        aria-expanded="false">
-        <img src={% static 'blog/img/user.jpg' %} alt="mdo" width="32" height="32" class="rounded-circle">
-      </a>
+
+      <section class="dropdown">
+        <a href={% url 'inicio' %} class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+          <img class="bi me-2" width="40" height="32" src={% static 'blog/img/logo-tecno.png' %}>
+          <span class="fs-4">Blog Tecno</span>
+        </a>
+      </section>
+
+      <section class="flex-shrink-0 dropdown">
+        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <img src={% static 'blog/img/user.jpg' %} alt="mdo" width="32" height="32" class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu text-small shadow">
+
+          {% if request.user.is_staff %}
+            <li><a class="dropdown-item" href={% url 'crear_articulo' %}>Crear Artículo</a></li>
+          {% endif %}
+
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#">Salir</a></li>
+
+        </ul>
+      </section>
     </header>
 
     <main class="mt-2">
@@ -88,6 +107,7 @@
         </aside>
       </section>
     </main>
+    <script src={% static 'blog/js/bootstrap.bundle.min.js' %}></script>
 
     <footer class="blog-footer">
       <p>Miguel Puente todos los derechos reservados ©</p>
