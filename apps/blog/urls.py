@@ -15,6 +15,13 @@ urlpatterns = [
 
     path('archivo/<int:year>/<int:month>', 
         views.ArticulosByArchivoViews.as_view(), name='archivo'),
-    
 
+    path('crear_articulo/', views.ArticuloCreateView.as_view(),
+         name='crear_articulo'),
+
+    path('actualizar_articulo/<slug:articulo_slug>',
+         views.ArticuloUpdateView.as_view(), name='actualizar_articulo'),
+
+    path('eliminar_articulo/<slug:articulo_slug>',
+         views.ArticuloDeleteView.as_view(), name='eliminar_articulo'),
 ]
