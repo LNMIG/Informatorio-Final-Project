@@ -14,7 +14,7 @@ urlpatterns = [
     path('autor/<str:autor>/', views.ArticulosByAutorView.as_view(), name='autor'),
 
     path('archivo/<int:year>/<int:month>', 
-        views.ArticulosByArchivoViews.as_view(), name='archivo'),
+        views.ArticulosByArchivoView.as_view(), name='archivo'),
 
     path('crear_articulo/', views.ArticuloCreateView.as_view(),
          name='crear_articulo'),
