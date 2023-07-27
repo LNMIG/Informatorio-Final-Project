@@ -24,4 +24,8 @@ urlpatterns = [
 
     path('eliminar_articulo/<slug:articulo_slug>',
          views.ArticuloDeleteView.as_view(), name='eliminar_articulo'),
+    
+    path('signup/', views.SignUpView.as_view(), name='signup'),
+
+    path('confirmacion/<str:code>/<str:user>/', views.ConfirmationView.as_view(), name='confirmacion'),
 ]
