@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.blog.apps.BlogConfig',
-
+    'apps.contacto.apps.ContactoConfig',
     'ckeditor',
 ]
 
@@ -141,6 +141,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+SITE_NAME = 'BLOG Noticias Robóticas'
 
 LOGIN_REDIRECT_URL = '/'
 
