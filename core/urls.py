@@ -27,6 +27,7 @@ handler404 = NotFoundView.as_view()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.blog.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 if settings.DEBUG:
