@@ -15,6 +15,13 @@
   {% endif %}
 
   <form method="post" action="{% url 'login' %}">
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
     {% csrf_token %}
     <table class="mt-5 mb-4">
       <tr>
