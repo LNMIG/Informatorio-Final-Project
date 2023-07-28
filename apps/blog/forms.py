@@ -20,6 +20,16 @@ class ArticuloForm(forms.ModelForm):
             'etiquetas': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
 
+class ComentarioForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Comentario
+        fields = ['contenido']
+
+        widgets = {
+            'contenido': forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'id':'textAreaExample', 'style':"background: #fff;"}),
+        }
+
 class RegisterUserForm(UserCreationForm):
     class Meta:
         model = User

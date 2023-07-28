@@ -1,13 +1,13 @@
-from django.contrib import messages
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
@@ -35,6 +35,27 @@ class ArticuloDetailView(DetailView):
     slug_field = 'slug'
     slug_url_kwarg = 'articulo_slug'
 
+
+    def get_context_data(self, **kwargs):
+        articulo_id = models.Articulo.objects.get(slug=self.kwargs['articulo_slug']).id
+        context = super(ArticuloDetailView, self).get_context_data(**kwargs)
+        context['form'] = forms.ComentarioForm
+        context['comentarios'] = models.Comentario.objects.filter(articulo_id=articulo_id)
+        context['es_comentarista'] = self.request.user
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = forms.ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.autor = request.user
+            comentario.articulo_id = models.Articulo.objects.get(slug=self.kwargs['articulo_slug']).id
+            comentario.save()
+            return redirect('apps.blog:articulo', articulo_slug=self.kwargs['articulo_slug'])
+        else:
+            context = self.get_context_data(**kwargs)
+            context['form'] = form
+            return self.render_to_response(context)
 
 class ArticulosByCategoriaView(ListView):
     model = models.Categoria
@@ -100,15 +121,18 @@ class ArticulosByArchivoView(YearArchiveView):
 
 
 def usuario_es_colaborador(user):
-    return user.groups.filter(name='colaborador').exists()
+    if user.groups.filter(name='colaborador').exists() or user.is_superuser:
+        return True
+    else:
+        return False
 
 
-@method_decorator(user_passes_test(usuario_es_colaborador, login_url='inicio'), name='dispatch')
+@method_decorator(user_passes_test(usuario_es_colaborador, login_url='apps.blog:inicio'), name='dispatch')
 class ArticuloCreateView(CreateView):
     model = models.Articulo
     template_name = 'blog/forms/crear_articulo.html'
     form_class = forms.ArticuloForm
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('apps.blog:inicio')
 
     def form_valid(self, form):
         form.instance.autor = self.request.user
@@ -131,7 +155,7 @@ class ArticuloUpdateView(UpdateView):
 
     def get_success_url(self):
         articulo = self.object
-        return reverse('articulo', kwargs={'articulo_slug': articulo.slug})
+        return reverse('apps.blog:articulo', kwargs={'articulo_slug': articulo.slug})
 
 
 @method_decorator(user_passes_test(usuario_es_colaborador, login_url='login'), name='dispatch')
@@ -140,7 +164,7 @@ class ArticuloDeleteView(DeleteView):
     template_name = 'blog/forms/eliminar_articulo.html'
     slug_field = 'slug'
     slug_url_kwarg = 'articulo_slug'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('apps.blog:inicio')
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -150,11 +174,28 @@ class ArticuloDeleteView(DeleteView):
         else:
             return redirect('login')
 
+class ComentarioUpdateView(UpdateView):
+    model = models.Comentario
+    context_object_name = 'comentario'
+    template_name = 'blog/forms/actualizar_comentario.html'
+    form_class = forms.ComentarioForm
+
+    def form_valid(self, form):
+        form.instance.autor = self.request.user
+        return super().form_valid(form)
+
+    success_url = reverse_lazy('apps.blog:inicio')
+
+class ComentarioDeleteView(DeleteView):
+    model = models.Comentario
+    context_object_name = 'comentario'
+    template_name = 'blog/forms/eliminar_comentario.html'
+    success_url = reverse_lazy('apps.blog:inicio')
 
 class SignUpView(CreateView):
     template_name = 'registration/register.html'
     form_class = forms.RegisterUserForm
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('apps.blog:inicio')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -167,7 +208,7 @@ class SignUpView(CreateView):
 
         domain = get_current_site(self.request).domain
         confirmation_link = self.request.build_absolute_uri(
-            reverse('confirmacion', kwargs={'code': token, 'user': uid})
+            reverse('apps.blog:confirmacion', kwargs={'code': token, 'user': uid})
         )
 
         subject = 'Confirmación de registro'
@@ -177,7 +218,6 @@ class SignUpView(CreateView):
         })
         send_mail(subject, message, settings.EMAIL_HOST_USER, [self.object.email])
         return response
-
 
 class ConfirmationView(View):
     def get(self, request, code, user):
