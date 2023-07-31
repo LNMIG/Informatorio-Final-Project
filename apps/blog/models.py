@@ -39,7 +39,7 @@ class Red(models.Model):
 #MODELO CATEGORIA
 class Categoria(models.Model):
     nombre = models.CharField(max_length=200, unique=True, verbose_name='Nombre')
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=200)
     activo = models.BooleanField(default=True, verbose_name='Activo')
     creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
     actualizacion = models.DateTimeField(auto_now=True, verbose_name='Fecha de actualización')
@@ -74,7 +74,7 @@ class Etiqueta(models.Model):
 #MODELO ARTICULOS
 class Articulo(models.Model):
     titulo = models.CharField(max_length=250, unique=True, verbose_name='Título')
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=250)
     bajada = models.CharField(max_length=150, verbose_name='Bajada')
     contenido = RichTextField(verbose_name='Contenido')
     imagen = models.ImageField(upload_to='blog/articulos/imagenes', null=True, blank=True, verbose_name='Imagen')

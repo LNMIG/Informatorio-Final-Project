@@ -5,7 +5,7 @@
 {% block contenido %}
 
     <section>
-        <h2 class="bg-light rounded ps-2">Actualizar Comentario</h2>
+        <h2 class="bg-light rounded ps-2">Actualizar el nombre de la categoría</h2>
         <br>
         <form method='post'>
             {% csrf_token %}
@@ -13,8 +13,8 @@
             {{ form.as_p }}
 
             <section class="my-3 mt-3 mb-5 card-body d-flex flex-row justify-content-end gap-2">
-              <a class="btn btn-dark rounded-pill" href={% url 'apps.blog:inicio' %}>Cancelar</a>
-              <input class='btn btn-dark rounded-pill float-end' type='submit' value='Actualizar Comentario'>
+              <a class="btn btn-dark rounded-pill" href={% url 'apps.blog:listar_categorias' %}>Cancelar</a>
+              <input class='btn btn-dark rounded-pill float-end' type='submit' value='Actualizar Categoría'>
             </section>
 
         </form>

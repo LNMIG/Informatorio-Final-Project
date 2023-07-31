@@ -30,6 +30,17 @@ class ComentarioForm(forms.ModelForm):
             'contenido': forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'id':'textAreaExample', 'style':"background: #fff;"}),
         }
 
+
+class CrearCategoriaForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Categoria
+        fields = ['nombre']
+
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 class RegisterUserForm(UserCreationForm):
     class Meta:
         model = User

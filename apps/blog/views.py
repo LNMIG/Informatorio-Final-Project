@@ -28,13 +28,30 @@ class InicioView(ListView):
     paginate_by = 3
     queryset = models.Articulo.objects.filter(publicado=True)
 
+    def post(self, request, *args, **kwargs):
+        # get the user selection
+        order_selected = request.POST['ORDER']
+        
+        # create an object_list for InicioView
+        self.object_list = models.Articulo.objects.filter(publicado=True)
+        
+        # get the context
+        context = super().get_context_data(**kwargs)
+
+        # check selection in order to add to the exiting context extra_context
+        if order_selected == 'descendente':
+            context['archivos'] = [{'fecha':fecha} for fecha in models.Articulo.objects.dates('creacion', 'month', order='DESC').filter(publicado=True)]
+        else:
+            context['archivos']= [{'fecha':fecha} for fecha in models.Articulo.objects.dates('creacion', 'month', order='ASC').filter(publicado=True)]
+        
+        return self.render_to_response(context)
+
 class ArticuloDetailView(DetailView):
     model = models.Articulo
     template_name = 'blog/articulo.html'
     context_object_name = 'articulo'
     slug_field = 'slug'
     slug_url_kwarg = 'articulo_slug'
-
 
     def get_context_data(self, **kwargs):
         articulo_id = models.Articulo.objects.get(slug=self.kwargs['articulo_slug']).id
@@ -174,6 +191,69 @@ class ArticuloDeleteView(DeleteView):
         else:
             return redirect('login')
 
+
+@method_decorator(user_passes_test(usuario_es_colaborador, login_url='apps.blog:inicio'), name='dispatch')
+class ArticuloListView(ListView):
+    model = models.Articulo
+    template_name = 'blog/articulo_listado.html'
+    context_object_name = 'articulos'
+
+@method_decorator(user_passes_test(usuario_es_colaborador, login_url='apps.blog:inicio'), name='dispatch')
+class ArticulosOrdenadosView(ListView):
+    model = models.Articulo
+    template_name = 'blog/articulo_listado.html'
+    context_object_name = 'articulos'
+    success_url = reverse_lazy('apps.blog:listar_articulos')
+
+    def get_queryset(self):
+        order_by = self.kwargs['order_by']
+        order_type = self.kwargs['order_type']
+
+        if order_by and order_type:
+            if order_by == 'fecha' and order_type=='DESC':
+                context = models.Articulo.objects.filter(publicado=True).order_by('-creacion')
+            elif order_by == 'fecha' and order_type=='ASC':
+                context = models.Articulo.objects.filter(publicado=True).order_by('creacion')
+            elif order_by == 'alfabeto' and order_type=='DESC':
+                context = models.Articulo.objects.filter(publicado=True).order_by('-titulo')
+            else:
+                context = models.Articulo.objects.filter(publicado=True).order_by('titulo')
+        else:
+            context = super().get_queryset()
+        return context
+
+@method_decorator(user_passes_test(usuario_es_colaborador, login_url='apps.blog:inicio'), name='dispatch')
+class CategoriaCreateView(CreateView):
+    model = models.Categoria
+    template_name = 'blog/forms/crear_categoria.html'
+    form_class = forms.CrearCategoriaForm
+    success_url = reverse_lazy('apps.blog:inicio')
+
+@method_decorator(user_passes_test(usuario_es_colaborador, login_url='apps.blog:inicio'), name='dispatch')
+class CategoriaListView(ListView):
+    model = models.Categoria
+    template_name = 'blog/categoria_listado.html'
+    context_object_name = 'categorias'
+
+@method_decorator(user_passes_test(usuario_es_colaborador, login_url='apps.blog:inicio'), name='dispatch')
+class CategoriaDeleteView(DeleteView):
+    model = models.Categoria
+    template_name = 'blog/forms/eliminar_categoria.html'
+    success_url = reverse_lazy('apps.blog:listar_categorias')
+
+@method_decorator(user_passes_test(usuario_es_colaborador, login_url='apps.blog:inicio'), name='dispatch')
+class CategoriaUpdateView(UpdateView):
+    model = models.Categoria
+    context_object_name = 'categoria'
+    template_name = 'blog/forms/actualizar_categoria.html'
+    form_class = forms.CrearCategoriaForm
+    success_url = reverse_lazy('apps.blog:listar_categorias')
+
+    def form_valid(self, form):
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return super().form_valid(form)
+
+
 class ComentarioUpdateView(UpdateView):
     model = models.Comentario
     context_object_name = 'comentario'
@@ -191,6 +271,7 @@ class ComentarioDeleteView(DeleteView):
     context_object_name = 'comentario'
     template_name = 'blog/forms/eliminar_comentario.html'
     success_url = reverse_lazy('apps.blog:inicio')
+
 
 class SignUpView(CreateView):
     template_name = 'registration/register.html'
