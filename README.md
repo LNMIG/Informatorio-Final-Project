@@ -2,6 +2,8 @@
 Proyecto final de la segunda etapa del Informatorio 2023 usando Python, Django, HTML, CSS, MySQL y deployado en pythonanywhere.
 
 
+
+
 ## Página de Inicio
 * Un usuario no registrado verá que puede loguearse, registrarse y navegar.
 ![2023-07-31 (3)](https://github.com/LNMIG/Informatorio_Final_Project/assets/96741070/dbde0c80-51ea-4f72-9bec-44d547bf45c0)
