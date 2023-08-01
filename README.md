@@ -1,8 +1,7 @@
 # Informatorio-Final-Project
 Proyecto final de la segunda etapa del Informatorio 2023 usando Python, Django, HTML, CSS, MySQL y deployado en pythonanywhere.
 
-
-
+---
 
 ## Página de Inicio
 * Un usuario no registrado verá que puede loguearse, registrarse y navegar.
