@@ -13,11 +13,15 @@
             class="w-100 py-1 d-flex justify-content-between align-items-center border-bottom border-danger"
             style="--bs-border-opacity: .5;"
           >
-            {{ categoria.nombre }}
-            <div class="d-flex justify-content-end align-items-center">
-              <a class="text-decoration-none pe-4" href= {% url 'apps.blog:actualizar_categoria' pk=categoria.pk %}><i class="bi bi-pencil-fill text-success"></i></a>
-              <a class="text-decoration-none" href= {% url 'apps.blog:eliminar_categoria' pk=categoria.pk %}><i class="bi bi-trash3 text-danger"></i></a>
-            </div>
+            {% if categoria.nombre == 'Sin categoría' %}
+              {{ categoria.nombre }}
+            {% else %}
+              {{ categoria.nombre }}
+              <div class="d-flex justify-content-end align-items-center">
+                <a class="text-decoration-none pe-4" href= {% url 'apps.blog:actualizar_categoria' pk=categoria.pk %}><i class="bi bi-pencil-fill text-success"></i></a>
+                <a class="text-decoration-none" href= {% url 'apps.blog:eliminar_categoria' pk=categoria.pk %}><i class="bi bi-trash3 text-danger"></i></a>
+              </div>
+            {% endif %}
           </li>
       {% empty %}
           <li>No se encontraron categorías registradas</li>

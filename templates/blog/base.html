@@ -114,7 +114,9 @@
               <h4 class="fst-italic">Categorías</h4>
               <ol class="list-unstyled mb-0">
                 {% for categoria in categorias %}
-                  <li><a class="text-decoration-none" href= {% url 'apps.blog:categoria' categoria_slug=categoria.slug%} >{{ categoria }}</a></li>
+                  {% if categoria.nombre != 'Sin categoría' %}
+                    <li><a class="text-decoration-none" href= {% url 'apps.blog:categoria' categoria_slug=categoria.slug%} >{{ categoria }}</a></li>
+                  {% endif %}
                 {% endfor %}
               </ol>
             </article>

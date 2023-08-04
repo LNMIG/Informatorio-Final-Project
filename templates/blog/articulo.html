@@ -1,15 +1,25 @@
 {% extends 'blog/base.html' %}
-
 {% load static %}
 
 {% block contenido %}
 
 <article class="blog-post">
     <section class="col-auto d-none d-lg-block">
-      <img src= {{ articulo.imagen.url }} class="img-fluid" alt="" />
+      <img src=
+                {% if articulo.imagen %}
+                  {{ articulo.imagen.url }}
+                {% else %}
+                  {% static 'blog/img/missing_robot.jpg' %}
+                {% endif %}
+            class="img-fluid" alt=""
+      />
     </section>
 
-    <strong class="d-inline-block mb-2 mt-3 text-primary"><a href= {% url 'apps.blog:categoria' categoria_slug=articulo.categoria.slug %} >{{ articulo.categoria }}</a></strong>
+    <strong class="d-inline-block mb-2 mt-3 text-primary">
+        <a href= {% url 'apps.blog:categoria' categoria_slug=articulo.categoria.slug %} >
+            {{ articulo.categoria }}
+        </a>
+    </strong>
     <h2 class="blog-post-title mb-1">{{ articulo.titulo }}</h2>
     <p class="blog-post-meta">{{ articulo.creacion|date:'d F Y'|capfirst }} por <a href= {% url 'apps.blog:autor' autor=articulo.autor%} >{{ articulo.autor }}</a></p>
 
@@ -31,7 +41,7 @@
       <section class='float-end'>
         <a class="btn btn-dark rounded-pill" href={% url 'apps.blog:actualizar_articulo' articulo_slug=articulo.slug %}>Editar</a>
         <a class="btn btn-dark rounded-pill" href={% url 'apps.blog:eliminar_articulo' articulo_slug=articulo.slug %}>Eliminar</a>
-    </section>
+      </section>
     {% endif %} 
   </section>
 

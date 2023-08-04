@@ -27,7 +27,13 @@ class ComentarioForm(forms.ModelForm):
         fields = ['contenido']
 
         widgets = {
-            'contenido': forms.Textarea(attrs={'class': 'form-control', 'rows':3, 'id':'textAreaExample', 'style':"background: #fff;"}),
+            'contenido': forms.Textarea(
+                attrs={'class': 'form-control', 
+                       'rows':3, 
+                       'id':'textAreaExample', 
+                       'style':"background: #fff;"
+                       }
+                       ),
         }
 
 
