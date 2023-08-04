@@ -79,7 +79,7 @@ class Articulo(models.Model):
     contenido = RichTextField(verbose_name='Contenido')
     imagen = models.ImageField(upload_to='blog/articulos/imagenes', null=True, blank=True, verbose_name='Imagen')
     publicado = models.BooleanField(default=True, verbose_name='Publicado')
-    categoria = models.ForeignKey(Categoria, on_delete=models.SET_DEFAULT, default=100000, related_name='get_articulos', verbose_name='Categoría')
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_DEFAULT, default=1, related_name='get_articulos', verbose_name='Categoría')
     autor = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='get_articulos', null=True, blank=True, verbose_name='Autor')
     etiquetas = models.ManyToManyField(Etiqueta, verbose_name='Etiquetas')
     creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creación')
